@@ -2,6 +2,7 @@ package com.teamsparta.abrasax.domain.post.service
 
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
 import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
+import com.teamsparta.abrasax.domain.exception.TagNotFoundException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.repository.MemberRepository
 import com.teamsparta.abrasax.domain.post.comment.model.toCommentResponseDto
@@ -34,6 +35,12 @@ class PostService(
         val comments = commentRepository.findAllByPostId(id).map { it.toCommentResponseDto() }
 
         return post.toPostWithCommentDtoResponse(comments)
+    }
+
+    fun getPostsByTag(tag: String): List<PostResponseDto> {
+        val post = postRepository.findByStringifiedTagsLike(tag) ?: throw TagNotFoundException(tag)
+
+        return post.map { it.toPostResponseDto() }
     }
 
     @Transactional

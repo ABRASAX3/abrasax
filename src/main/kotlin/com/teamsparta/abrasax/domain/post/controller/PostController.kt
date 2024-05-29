@@ -22,6 +22,14 @@ class PostController(private val postService: PostService) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostById(id))
     }
 
+    @GetMapping("/tag")
+    fun getPostsByTag(@RequestParam tag: String): ResponseEntity<List<PostResponseDto>> {
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.getPostsByTag(tag))
+    }
+
     @PostMapping
     fun createPost(@RequestBody createPostRequestDto: CreatePostRequestDto): ResponseEntity<PostResponseDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(createPostRequestDto))
