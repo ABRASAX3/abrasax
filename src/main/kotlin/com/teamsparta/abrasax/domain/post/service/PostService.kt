@@ -1,5 +1,6 @@
 package com.teamsparta.abrasax.domain.post.service
 
+import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
 import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
@@ -17,6 +18,7 @@ import com.teamsparta.abrasax.domain.post.repository.PostRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class PostService(
@@ -64,7 +66,13 @@ class PostService(
     @Transactional
     fun deletePost(id: Long) {
         val post = postRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("Post", id)
-        commentRepository.deleteAll(commentRepository.findAllByPostId(id))
+
+        if (post.deletedAt != null) {
+            throw DeleteNotAllowedException("post", id)
+        }
+
+//        commentRepository.deleteAll(commentRepository.findAllByPostId(id))
+        post.deletedAt = LocalDateTime.now()
         postRepository.delete(post)
     }
 }
