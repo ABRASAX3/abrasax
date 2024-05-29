@@ -1,6 +1,5 @@
 package com.teamsparta.abrasax.domain.post.model
 
-import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.model.Member
 import com.teamsparta.abrasax.domain.post.comment.dto.CommentResponseDto
@@ -45,14 +44,14 @@ class Post(
         require(content.length <= 1000) { "내용의 길이는 1000자 이하여야 합니다" }
     }
 
-    private fun validateTags(tags: String) {
-        require(tags.split(",").all { it.length <= 15 }) { "태그 하나의 길이는 15자 이하여야 합니다" }
+    private fun validateTags(tags: List<String>) {
+        require(tags.all { it.length <= 15 }) { "태그 하나의 길이는 15자 이하여야 합니다" }
     }
 
     fun update(newTitle: String, newContent: String, newTags: List<String>) {
         validateTitle(newTitle)
         validateContent(newContent)
-        validateTags(newTags.joinToString(","))
+        validateTags(newTags)
 
         this.title = newTitle
         this.content = newContent
@@ -61,11 +60,7 @@ class Post(
     }
 
     fun delete() {
-        if (deletedAt == null) {
-            deletedAt = LocalDateTime.now()
-        } else {
-            throw DeleteNotAllowedException("Post", this.id ?: -1)
-        }
+        deletedAt = LocalDateTime.now()
     }
 }
 
