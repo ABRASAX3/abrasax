@@ -1,5 +1,6 @@
 package com.teamsparta.abrasax.domain.post.model
 
+import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.model.Member
 import com.teamsparta.abrasax.domain.post.comment.dto.CommentResponseDto
@@ -28,19 +29,13 @@ class Post(
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: LocalDateTime? = null,
-
+    var updatedAt: LocalDateTime?,
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-
-    @PreUpdate
-    fun preUpdate() {
-        updatedAt = LocalDateTime.now()
-    }
 
     private fun validateTitle(title: String) {
         require(title.length <= 20) { "제목의 길이는 20자 이하여야 합니다" }
@@ -62,6 +57,15 @@ class Post(
         this.title = newTitle
         this.content = newContent
         this.stringifiedTags = ListStringifyHelper.stringifyList(newTags)
+        this.updatedAt = LocalDateTime.now()
+    }
+
+    fun delete() {
+        if (deletedAt == null) {
+            deletedAt = LocalDateTime.now()
+        } else {
+            throw DeleteNotAllowedException("Post", this.id ?: -1)
+        }
     }
 }
 
