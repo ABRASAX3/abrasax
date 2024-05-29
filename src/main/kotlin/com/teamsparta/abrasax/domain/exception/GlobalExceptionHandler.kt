@@ -1,7 +1,9 @@
 package com.teamsparta.abrasax.domain.exception.dto
 
+import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
 import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
 import com.teamsparta.abrasax.domain.exception.PasswordNotMatchException
+import com.teamsparta.abrasax.domain.exception.TagNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -21,9 +23,14 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
-//    @ExceptionHandler(MemberNotFoundException::class)
-//    fun handleMemberNotFoundException(ex: MemberNotFoundException): ResponseEntity<ErrorResponse> {
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
-//    }
+    @ExceptionHandler(TagNotFoundException::class)
+    fun handleTagNotFoundException(ex: TagNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(MemberNotFoundException::class)
+    fun handleMemberNotFoundException(ex: MemberNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
+    }
 
 }
