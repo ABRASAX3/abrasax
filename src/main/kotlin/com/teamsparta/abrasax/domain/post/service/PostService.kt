@@ -43,12 +43,16 @@ class PostService(
         val (title, content, tags, authorId) = request
         val member = memberRepository.findByIdOrNull(authorId)
             ?: throw MemberNotFoundException(authorId)
+        val createdAt = LocalDateTime.now()
+
         val post =
             Post(
                 title = title,
                 content = content,
                 stringifiedTags = ListStringifyHelper.stringifyList(tags),
-                member = member
+                member = member,
+                createdAt = createdAt,
+                updatedAt = createdAt,
             )
 
         return postRepository.save(post).toPostResponseDto()
@@ -65,14 +69,10 @@ class PostService(
 
     @Transactional
     fun deletePost(id: Long) {
-        val post = postRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("Post", id)
+        val post =
+            postRepository.findPostByIdAndDeletedAtIsNull(id).orElseThrow { DeleteNotAllowedException("post", id) }
 
-        if (post.deletedAt != null) {
-            throw DeleteNotAllowedException("post", id)
-        }
-
-//        commentRepository.deleteAll(commentRepository.findAllByPostId(id))
-        post.deletedAt = LocalDateTime.now()
-        postRepository.delete(post)
+        post.delete()
+        postRepository.save(post)
     }
 }
