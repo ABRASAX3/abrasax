@@ -1,6 +1,4 @@
 package com.teamsparta.abrasax.domain.post.model
-
-
 import com.teamsparta.abrasax.domain.exception.*
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.model.Member
@@ -59,26 +57,26 @@ class Post(
     companion object {
         private fun validateTitleLength(title: String) {
             if (title.isEmpty() || title.length > 20) {
-                throw InvalidTitleException("제목은 비어있지 않고 20자 이하여야 합니다.")
+                throw ModelInvariantException.InvalidTitleException("제목은 비어있지 않고 20자 이하여야 합니다.")
             }
         }
         private fun validateContentLength(content: String) {
             if (content.isEmpty() || content.length > 1000) {
-                throw InvalidContentException("내용은 비어있지 않고 1000자 이하여야 합니다.")
+                throw ModelInvariantException.InvalidContentException("내용은 비어있지 않고 1000자 이하여야 합니다.")
             }
         }
         private fun validateTagListSize(tag: List<String>) {
-            if (tag.size > 5) throw InvalidTagSizeException("태그는 5개를 초과할 수 없습니다.")
+            if (tag.size > 5)
+                throw ModelInvariantException.InvalidTagSizeException("태그는 5개를 초과할 수 없습니다.")
         }
-
         private fun validateTagLength(tag: List<String>) {
-            if (tag.any { it.length > 15 }) throw InvalidTagLengthException("태그는 15자 이하여야 합니다.")
+            if (tag.any { it.length > 15})
+                throw ModelInvariantException.InvalidTagLengthException("태그는 15자 이하여야 합니다.")
         }
-
         private fun validateNoDuplicateTags(tags: List<String>) {
             val distinctTags = tags.distinct()
             if (distinctTags.size != tags.size) {
-                throw InvalidDuplicateTagException("중복된 태그는 생성이 불가능합니다.")
+                throw ModelInvariantException.InvalidDuplicateTagException("중복된 태그는 생성이 불가능합니다.")
             }
         }
 
