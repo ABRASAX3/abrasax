@@ -58,12 +58,12 @@ class Post(
 
     companion object {
         private fun validateTitleLength(title: String) {
-            if (title.isEmpty() || title.length > 5) {
+            if (title.isEmpty() || title.length > 20) {
                 throw InvalidTitleException("제목은 비어있지 않고 20자 이하여야 합니다.")
             }
         }
         private fun validateContentLength(content: String) {
-            if (content.isEmpty() || content.length > 5) {
+            if (content.isEmpty() || content.length > 1000) {
                 throw InvalidContentException("내용은 비어있지 않고 1000자 이하여야 합니다.")
             }
         }
@@ -72,7 +72,7 @@ class Post(
         }
 
         private fun validateTagLength(tagList: List<String>) {
-            if (tagList.any { it.length > 5 }) throw InvalidTagLengthException("태그는 15자 이하여야 합니다.")
+            if (tagList.any { it.length > 15 }) throw InvalidTagLengthException("태그는 15자 이하여야 합니다.")
         }
 
         private fun validateNoDuplicateTags(tags: List<String>) {
