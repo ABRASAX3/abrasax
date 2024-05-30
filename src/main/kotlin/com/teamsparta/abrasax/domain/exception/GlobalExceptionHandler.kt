@@ -1,6 +1,7 @@
 package com.teamsparta.abrasax.domain.exception.dto
 
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
+import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
 import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
 import com.teamsparta.abrasax.domain.exception.PasswordNotMatchException
 import com.teamsparta.abrasax.domain.exception.TagNotFoundException
@@ -22,6 +23,12 @@ class GlobalExceptionHandler {
     fun handlePasswordNotMatchException(ex: PasswordNotMatchException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
+
+    @ExceptionHandler(DeleteNotAllowedException::class)
+    fun handleDeleteNotAllowedException(ex: DeleteNotAllowedException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse(message = ex.message))
+    }
+
 
     @ExceptionHandler(TagNotFoundException::class)
     fun handleTagNotFoundException(ex: TagNotFoundException): ResponseEntity<ErrorResponse> {
