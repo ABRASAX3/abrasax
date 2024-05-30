@@ -5,6 +5,7 @@ import com.teamsparta.abrasax.domain.post.dto.PostResponseDto
 import com.teamsparta.abrasax.domain.post.dto.PostResponseWithCommentDto
 import com.teamsparta.abrasax.domain.post.dto.UpdatePostRequestDto
 import com.teamsparta.abrasax.domain.post.service.PostService
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -20,12 +21,15 @@ class PostController(private val postService: PostService) {
 
     @GetMapping
     fun getPosts(
-        @RequestParam createdAt: LocalDateTime,
+        @RequestParam(required = false) cursorCreatedAt: LocalDateTime?,
         @RequestParam pageNumber: Int,
-        @RequestParam pageSize: Int
+        @RequestParam pageSize: Int,
+        @RequestParam sortDirection: String
     ): ResponseEntity<List<PostResponseDto>> {
-        val posts = postService.getPosts(createdAt, pageNumber, pageSize)
-        return ResponseEntity.ok(posts)
+        val direction = Sort.Direction.valueOf(sortDirection.uppercase())
+        val cursor = cursorCreatedAt ?: postService.getCurrentTime()
+        val posts = postService.getPosts(cursor, pageNumber, pageSize, direction)
+        return ResponseEntity.status(HttpStatus.OK).body(posts)
     }
 
     @GetMapping("/{postId}")
@@ -34,11 +38,17 @@ class PostController(private val postService: PostService) {
     }
 
     @GetMapping("/tag")
-    fun getPostsByTag(@RequestParam tag: String): ResponseEntity<List<PostResponseDto>> {
-
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(postService.getPostsByTag(tag))
+    fun getPostsByTag(
+        @RequestParam tag: String,
+        @RequestParam(required = false) cursorCreatedAt: LocalDateTime?,
+        @RequestParam pageNumber: Int,
+        @RequestParam pageSize: Int,
+        @RequestParam sortDirection: String,
+    ): ResponseEntity<List<PostResponseDto>> {
+        val direction = Sort.Direction.valueOf(sortDirection.uppercase())
+        val cursor = cursorCreatedAt ?: postService.getCurrentTime()
+        val posts = postService.getPostsByTag(tag, cursor, pageNumber, pageSize, direction)
+        return ResponseEntity.status(HttpStatus.OK).body(posts)
     }
 
     @PostMapping

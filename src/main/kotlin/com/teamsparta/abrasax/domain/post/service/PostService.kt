@@ -16,6 +16,7 @@ import com.teamsparta.abrasax.domain.post.model.toPostResponseDto
 import com.teamsparta.abrasax.domain.post.model.toPostWithCommentDtoResponse
 import com.teamsparta.abrasax.domain.post.repository.PostRepository
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,12 +32,40 @@ class PostService(
 //        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).map { it.toPostResponseDto() }
 //    }
 
-    fun getPosts(createdAt: LocalDateTime, pageNumber: Int, pageSize: Int): List<PostResponseDto> {
-        val pageable = PageRequest.of(pageNumber, pageSize)
-        return postRepository.findByCreatedAtBeforeOrderByCreatedAtDesc(createdAt, pageable)
-            .map { it.toPostResponseDto() }
+    fun getCurrentTime(): LocalDateTime {
+        return LocalDateTime.now()
     }
 
+    fun getPosts(
+        cursorCreatedAt: LocalDateTime,
+        pageNumber: Int,
+        pageSize: Int,
+        sortDirection: Sort.Direction
+    ): List<PostResponseDto> {
+        val sort = Sort.by(sortDirection, "createdAt")
+        val pageable = PageRequest.of(pageNumber, pageSize, sort)
+
+        val posts = postRepository.findByCreatedAtBeforeAndDeletedAtIsNull(cursorCreatedAt, pageable)
+        return posts.map { it.toPostResponseDto() }
+    }
+
+    fun getPostsByTag(
+        tag: String,
+        cursorCreatedAt: LocalDateTime,
+        pageNumber: Int,
+        pageSize: Int,
+        sortDirection: Sort.Direction
+    ): List<PostResponseDto> {
+        val sort = Sort.by(sortDirection, "createdAt")
+        val pageable = PageRequest.of(pageNumber, pageSize, sort)
+
+        val posts = postRepository.findByStringifiedTagsEqualsAndCreatedAtBeforeAndDeletedAtIsNull(
+            tag,
+            cursorCreatedAt,
+            pageable
+        )
+        return posts.map { it.toPostResponseDto() }
+    }
 
     fun getPostById(id: Long): PostResponseWithCommentDto {
 
@@ -44,12 +73,6 @@ class PostService(
         val comments = commentRepository.findAllByPostId(id).map { it.toCommentResponseDto() }
 
         return post.toPostWithCommentDtoResponse(comments)
-    }
-
-    fun getPostsByTag(tag: String): List<PostResponseDto> {
-        val post = postRepository.findAllByStringifiedTagsLike(tag)
-
-        return post.map { it.toPostResponseDto() }
     }
 
     @Transactional

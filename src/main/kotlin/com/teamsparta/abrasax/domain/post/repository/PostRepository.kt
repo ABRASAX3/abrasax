@@ -10,7 +10,12 @@ import java.util.*
 @Repository
 interface PostRepository : JpaRepository<Post, Long> {
     fun findPostByIdAndDeletedAtIsNull(id: Long): Optional<Post>
-    fun findAllByStringifiedTagsLike(tag: String): List<Post>
-    fun findByCreatedAtBeforeOrderByCreatedAtDesc(createdAt: LocalDateTime, pageable: Pageable): List<Post>
+    fun findByStringifiedTagsEqualsAndCreatedAtBeforeAndDeletedAtIsNull(
+        tag: String,
+        cursorCreatedAt: LocalDateTime,
+        pageable: Pageable
+    ): List<Post>
+
+    fun findByCreatedAtBeforeAndDeletedAtIsNull(cursorCreatedAt: LocalDateTime, pageable: Pageable): List<Post>
 }
 
