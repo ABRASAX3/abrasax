@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException::class)
     fun handlerAuthenticationException(ex: AuthenticationException): ResponseEntity<ErrorResponse> {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(message = ex.message))
     }
 
 //    @ExceptionHandler(MemberNotFoundException::class)

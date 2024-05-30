@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.regex.Pattern
 
 @Service
 class AuthService(
@@ -41,22 +42,50 @@ class AuthService(
     @Transactional
     fun signUp(signUpRequest: SignUpRequest) { //회원가입할때 사용자를 등록하는 함수
         val (email, password, nickname) = signUpRequest
+        validatePassword(password)
+        if (memberRepository.existsByEmail(email)) throw IllegalArgumentException("Email already exists")
+
         val member = Member.of(
             email = email,
             password = passwordEncoder.encode(password),
-            nickname = nickname
+            nickname = nickname,
+            stringifiedSocialAccounts = ""
         ) // membersecurity dto에서 입력받은 email이랑 암호화된 비밀번호를 해당 변수에 저장
         memberRepository.save(member) //데이터베이스에 암호화된 비밀번호랑 이메일을 저장함
     }
 
     @Transactional
-    fun updatePassword(id: Long, request: UpdatePasswordRequest): MemberResponse {
+    fun updatePassword(id: Long, request: UpdatePasswordRequest): MemberResponse {//??
         val member =
             memberRepository.findByIdOrNull(id) ?: throw MemberNotFoundException(id)
         val (currentPassword, newPassword) = request
-        if (member.password != passwordEncoder.encode(currentPassword)) throw PasswordNotMatchException()
+
+        if (!passwordEncoder.matches(currentPassword, member.password)) throw PasswordNotMatchException()
+
+        if (currentPassword == newPassword) {
+            throw IllegalArgumentException("새로운 비밀번호와 현재 비밀번호가 동일함")
+        }
+        validatePassword(newPassword)
         member.updatePassword(passwordEncoder.encode(newPassword))
         return member.toResponse()
     }
+
+    private fun validatePassword(password: String) {
+
+        if (!Pattern.matches(
+                "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$",
+                password
+            )
+        ) {
+            throw IllegalArgumentException("Invalid password format. ${password}")
+        }
+        if (password.length < 8 || password.length > 20) {
+            throw IllegalArgumentException("Password must be more than 8 characters and less than 20 characters. ${password}")
+        }
+
+        // ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$ 이전 비밀번호 규칙
+        //"^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#\$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?]).{6,}$" 특수문자까지 포함한 비밀번호 규칙
+    }
+
 
 }

@@ -26,6 +26,7 @@ class Member(
 
     fun updateProfile(newSocialAccounts: List<String>, newNickname: String) {
         validateNickname(nickname)
+        validateSocialAccounts(newSocialAccounts)
         nickname = newNickname
         stringifiedSocialAccounts = ListStringifyHelper.stringifyList(newSocialAccounts)
 
@@ -33,10 +34,8 @@ class Member(
     }
 
     fun updatePassword(newPassword: String) {
-        validatePassword(password)
-        checkingDuplicatedPassword(password, newPassword)
+        //validatePassword(newPassword)
         password = newPassword
-
     }
 
     companion object {
@@ -44,46 +43,38 @@ class Member(
             if (nickname.length > 10) {
                 throw IllegalArgumentException("Nickname must be less than 10 characters.")
             }
-            if(!Pattern.matches("^[a-zA-Z0-9]*$",nickname)){ //특수문자 확인
+            if (!Pattern.matches("^[a-zA-Z0-9]*$", nickname)) { //특수문자 확인
                 throw IllegalArgumentException("Invalid nickname format.")
             }
         }
 
-        private fun validateEmail(email: String){
+        private fun validateEmail(email: String) {
 
-            if(!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$",email)){
+            if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", email)) {
                 throw IllegalArgumentException("Invalid email format.")
             }
         }
-        private fun validatePassword(password: String){
 
-            if(!Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$",password)){
-                throw IllegalArgumentException("Invalid password format.")
-            }
-            if(password.length<8 || password.length>20){
-                throw IllegalArgumentException("Password must be more than 8 characters and less than 20 characters.")
+
+        private fun validateSocialAccounts(socialAccounts: List<String>) {
+            if (!socialAccounts.all { it.startsWith("http://") } || !socialAccounts.all { it.startsWith("https://") }) {
+                throw IllegalArgumentException("Social account URLs must start with http:// or https://")
             }
 
-            //"^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#\$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?]).{6,}$" 특수문자까지 포함한 비밀번호 규칙
-        }
-        private fun checkingDuplicatedPassword(currentPassword: String, newPassword: String){
-            if(currentPassword==newPassword){
-                throw IllegalArgumentException("Passwords are equal")
-            }
         }
 
 
-
-        fun of(email: String, nickname: String, password: String): Member {
+        fun of(email: String, nickname: String, password: String, stringifiedSocialAccounts: String): Member {
             validateNickname(nickname)
             validateEmail(email)
-            validatePassword(password)
+            //validatePassword(password)
+
 
             return Member(
                 email = email,
                 nickname = nickname,
                 password = password,
-                stringifiedSocialAccounts = ""
+                stringifiedSocialAccounts = stringifiedSocialAccounts
             )
         }
     }

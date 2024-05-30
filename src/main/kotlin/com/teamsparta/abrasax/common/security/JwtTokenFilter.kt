@@ -1,6 +1,5 @@
 package com.teamsparta.abrasax.common.security
 
-
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtTokenFilter(
     private val jwtTokenProvider: JwtTokenProvider,
 ) : OncePerRequestFilter() {
-
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
