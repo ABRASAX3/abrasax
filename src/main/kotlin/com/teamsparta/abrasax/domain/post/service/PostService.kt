@@ -1,5 +1,8 @@
 package com.teamsparta.abrasax.domain.post.service
 
+import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
+import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
+import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.repository.MemberRepository
 import com.teamsparta.abrasax.domain.post.comment.model.toCommentResponseDto
@@ -15,6 +18,7 @@ import com.teamsparta.abrasax.domain.post.repository.PostRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class PostService(
@@ -28,7 +32,7 @@ class PostService(
 
     fun getPostById(id: Long): PostResponseWithCommentDto {
 
-        val post = postRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Post not found")
+        val post = postRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("Post", id)
         val comments = commentRepository.findAllByPostId(id).map { it.toCommentResponseDto() }
 
         return post.toPostWithCommentDtoResponse(comments)
@@ -37,14 +41,18 @@ class PostService(
     @Transactional
     fun createPost(request: CreatePostRequestDto): PostResponseDto {
         val (title, content, tags, authorId) = request
-        val author = memberRepository.findByIdOrNull(authorId)
-            ?: throw IllegalArgumentException("Member id: ($authorId) is not found")
+        val member = memberRepository.findByIdOrNull(authorId)
+            ?: throw MemberNotFoundException(authorId)
+        val createdAt = LocalDateTime.now()
+
         val post =
             Post(
                 title = title,
                 content = content,
                 stringifiedTags = ListStringifyHelper.stringifyList(tags),
-                author = author
+                member = member,
+                createdAt = createdAt,
+                updatedAt = createdAt,
             )
 
         return postRepository.save(post).toPostResponseDto()
@@ -53,7 +61,7 @@ class PostService(
     @Transactional
     fun updatePost(id: Long, request: UpdatePostRequestDto): PostResponseDto {
         val (title, content, tags) = request
-        val post = postRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Post not found")
+        val post = postRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("Post", id)
 
         post.update(title, content, tags)
         return post.toPostResponseDto()
@@ -61,8 +69,10 @@ class PostService(
 
     @Transactional
     fun deletePost(id: Long) {
-        val post = postRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Post not found")
-        commentRepository.deleteAll(commentRepository.findAllByPostId(id))
-        postRepository.delete(post)
+        val post =
+            postRepository.findPostByIdAndDeletedAtIsNull(id).orElseThrow { DeleteNotAllowedException("post", id) }
+
+        post.delete()
+        postRepository.save(post)
     }
 }
