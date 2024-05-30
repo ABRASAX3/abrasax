@@ -8,13 +8,24 @@ import com.teamsparta.abrasax.domain.post.service.PostService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/posts")
 class PostController(private val postService: PostService) {
+//    @GetMapping
+//    fun getPosts(): ResponseEntity<List<PostResponseDto>> {
+//        return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts())
+//    }
+
     @GetMapping
-    fun getPosts(): ResponseEntity<List<PostResponseDto>> {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts())
+    fun getPosts(
+        @RequestParam createdAt: LocalDateTime,
+        @RequestParam pageNumber: Int,
+        @RequestParam pageSize: Int
+    ): ResponseEntity<List<PostResponseDto>> {
+        val posts = postService.getPosts(createdAt, pageNumber, pageSize)
+        return ResponseEntity.ok(posts)
     }
 
     @GetMapping("/{postId}")

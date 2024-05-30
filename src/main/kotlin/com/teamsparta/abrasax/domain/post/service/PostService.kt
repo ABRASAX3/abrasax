@@ -3,7 +3,6 @@ package com.teamsparta.abrasax.domain.post.service
 import com.teamsparta.abrasax.domain.exception.DeleteNotAllowedException
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
 import com.teamsparta.abrasax.domain.exception.ModelNotFoundException
-import com.teamsparta.abrasax.domain.exception.TagNotFoundException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
 import com.teamsparta.abrasax.domain.member.repository.MemberRepository
 import com.teamsparta.abrasax.domain.post.comment.model.toCommentResponseDto
@@ -16,6 +15,7 @@ import com.teamsparta.abrasax.domain.post.model.Post
 import com.teamsparta.abrasax.domain.post.model.toPostResponseDto
 import com.teamsparta.abrasax.domain.post.model.toPostWithCommentDtoResponse
 import com.teamsparta.abrasax.domain.post.repository.PostRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,9 +27,16 @@ class PostService(
     private val commentRepository: CommentRepository,
     private val memberRepository: MemberRepository,
 ) {
-    fun getPosts(): List<PostResponseDto> {
-        return postRepository.findAll().map { it.toPostResponseDto() }
+//    fun getPosts(): List<PostResponseDto> {
+//        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).map { it.toPostResponseDto() }
+//    }
+
+    fun getPosts(createdAt: LocalDateTime, pageNumber: Int, pageSize: Int): List<PostResponseDto> {
+        val pageable = PageRequest.of(pageNumber, pageSize)
+        return postRepository.findByCreatedAtBeforeOrderByCreatedAtDesc(createdAt, pageable)
+            .map { it.toPostResponseDto() }
     }
+
 
     fun getPostById(id: Long): PostResponseWithCommentDto {
 
@@ -40,7 +47,7 @@ class PostService(
     }
 
     fun getPostsByTag(tag: String): List<PostResponseDto> {
-        val post = postRepository.findByStringifiedTagsLike(tag) ?: throw TagNotFoundException(tag)
+        val post = postRepository.findAllByStringifiedTagsLike(tag)
 
         return post.map { it.toPostResponseDto() }
     }
