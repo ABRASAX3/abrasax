@@ -43,16 +43,14 @@ class PostService(
         val (title, content, tags, authorId) = request
         val member = memberRepository.findByIdOrNull(authorId)
             ?: throw MemberNotFoundException(authorId)
-        val createdAt = LocalDateTime.now()
 
-        val post =
-            Post(
+
+        val post = Post.of(
                 title = title,
                 content = content,
-                stringifiedTags = ListStringifyHelper.stringifyList(tags),
+                tags = tags,
                 member = member,
-                createdAt = createdAt,
-                updatedAt = createdAt,
+
             )
 
         return postRepository.save(post).toPostResponseDto()

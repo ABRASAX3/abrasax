@@ -5,6 +5,7 @@ import com.teamsparta.abrasax.domain.post.dto.PostResponseDto
 import com.teamsparta.abrasax.domain.post.dto.PostResponseWithCommentDto
 import com.teamsparta.abrasax.domain.post.dto.UpdatePostRequestDto
 import com.teamsparta.abrasax.domain.post.service.PostService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
