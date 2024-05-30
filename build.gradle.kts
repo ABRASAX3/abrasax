@@ -31,6 +31,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-security") // JWT 의존성 추가
     implementation("io.jsonwebtoken:jjwt:0.9.1") // JWT 의존성 추가
+    implementation  ("javax.xml.bind:jaxb-api:2.3.1")
 }
 
 tasks.withType<KotlinCompile> {

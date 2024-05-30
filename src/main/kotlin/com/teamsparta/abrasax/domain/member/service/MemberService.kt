@@ -1,10 +1,8 @@
 package com.teamsparta.abrasax.domain.member.service
 
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
-import com.teamsparta.abrasax.domain.exception.PasswordNotMatchException
 import com.teamsparta.abrasax.domain.member.dto.MemberResponse
-import com.teamsparta.abrasax.domain.member.dto.SignUpRequest
-import com.teamsparta.abrasax.domain.member.dto.UpdatePasswordRequest
+import com.teamsparta.abrasax.domain.member.authentication.dto.SignUpRequest
 import com.teamsparta.abrasax.domain.member.dto.UpdateProfileRequest
 import com.teamsparta.abrasax.domain.member.model.Member
 import com.teamsparta.abrasax.domain.member.model.toResponse
@@ -38,13 +36,5 @@ class MemberService(private val memberRepository: MemberRepository) {
         return member.toResponse()
     }
 
-    @Transactional
-    fun updatePassword(id: Long, request: UpdatePasswordRequest): MemberResponse {
-        val member =
-            memberRepository.findByIdOrNull(id) ?: throw MemberNotFoundException(id)
-        val (currentPassword, newPassword) = request
-        if (member.password != currentPassword) throw PasswordNotMatchException()
-        member.updatePassword(newPassword)
-        return member.toResponse()
-    }
+
 }

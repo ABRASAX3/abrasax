@@ -2,7 +2,7 @@ package com.teamsparta.abrasax.domain.member.controller
 
 import com.teamsparta.abrasax.domain.member.dto.*
 import com.teamsparta.abrasax.domain.member.service.MemberService
-import com.teamsparta.abrasax.domain.security.dto.LoginRequest
+import com.teamsparta.abrasax.domain.member.authentication.dto.SignUpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -31,14 +31,6 @@ class MemberController(
         @RequestBody updateProfileRequest: UpdateProfileRequest
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.updateProfile(memberId, updateProfileRequest))
-    }
-
-    @PutMapping("/{memberId}/password")
-    fun updatePassword(
-        @PathVariable memberId: Long,
-        @RequestBody updatePasswordRequest: UpdatePasswordRequest
-    ): ResponseEntity<MemberResponse> {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.updatePassword(memberId, updatePasswordRequest))
     }
 
 }
