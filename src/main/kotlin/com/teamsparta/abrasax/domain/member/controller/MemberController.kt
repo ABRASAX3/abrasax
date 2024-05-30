@@ -5,7 +5,6 @@ import com.teamsparta.abrasax.domain.member.dto.SignUpRequest
 import com.teamsparta.abrasax.domain.member.dto.UpdatePasswordRequest
 import com.teamsparta.abrasax.domain.member.dto.UpdateProfileRequest
 import com.teamsparta.abrasax.domain.member.service.MemberService
-import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +16,7 @@ class MemberController(
 ) {
 
     @PostMapping("/")
-    fun signUp(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<MemberResponse> {
+    fun signUp(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<MemberResponse> {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.signUp(signUpRequest))
     }
 
