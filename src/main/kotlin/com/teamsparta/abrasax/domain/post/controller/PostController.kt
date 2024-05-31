@@ -4,8 +4,8 @@ import com.teamsparta.abrasax.domain.post.dto.CreatePostRequestDto
 import com.teamsparta.abrasax.domain.post.dto.PostResponseDto
 import com.teamsparta.abrasax.domain.post.dto.PostResponseWithCommentDto
 import com.teamsparta.abrasax.domain.post.dto.UpdatePostRequestDto
+import com.teamsparta.abrasax.domain.post.model.SortDirection
 import com.teamsparta.abrasax.domain.post.service.PostService
-import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -14,21 +14,16 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/posts")
 class PostController(private val postService: PostService) {
-//    @GetMapping
-//    fun getPosts(): ResponseEntity<List<PostResponseDto>> {
-//        return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts())
-//    }
 
     @GetMapping
     fun getPosts(
         @RequestParam(required = false) cursorCreatedAt: LocalDateTime?,
-        @RequestParam pageNumber: Int,
-        @RequestParam pageSize: Int,
-        @RequestParam sortDirection: String
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "DESC") sortDirection: String,
     ): ResponseEntity<List<PostResponseDto>> {
-        val direction = Sort.Direction.valueOf(sortDirection.uppercase())
-        val cursor = cursorCreatedAt ?: postService.getCurrentTime()
-        val posts = postService.getPosts(cursor, pageNumber, pageSize, direction)
+        val direction = SortDirection.fromString(sortDirection)
+        val posts = postService.getPosts(cursorCreatedAt, pageNumber, pageSize, direction)
         return ResponseEntity.status(HttpStatus.OK).body(posts)
     }
 
@@ -41,13 +36,12 @@ class PostController(private val postService: PostService) {
     fun getPostsByTag(
         @RequestParam tag: String,
         @RequestParam(required = false) cursorCreatedAt: LocalDateTime?,
-        @RequestParam pageNumber: Int,
-        @RequestParam pageSize: Int,
-        @RequestParam sortDirection: String,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "DESC") sortDirection: String,
     ): ResponseEntity<List<PostResponseDto>> {
-        val direction = Sort.Direction.valueOf(sortDirection.uppercase())
-        val cursor = cursorCreatedAt ?: postService.getCurrentTime()
-        val posts = postService.getPostsByTag(tag, cursor, pageNumber, pageSize, direction)
+        val direction = SortDirection.fromString(sortDirection)
+        val posts = postService.getPostsByTag(tag, cursorCreatedAt, pageNumber, pageSize, direction)
         return ResponseEntity.status(HttpStatus.OK).body(posts)
     }
 
