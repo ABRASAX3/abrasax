@@ -27,9 +27,9 @@ class NaverOAuthServiceImpl(
     private val authenticationManager: AuthenticationManager,
     private val jwtTokenProvider: JwtTokenProvider,
     private val passwordEncoder: PasswordEncoder,
-) {
+) : OAuthService {
 
-    fun login(request: LoginRequest): LoginResponse {
+    override fun login(request: LoginRequest): LoginResponse {
         val (email, password) = request
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(email, password)
@@ -37,12 +37,13 @@ class NaverOAuthServiceImpl(
         return LoginResponse(token = jwtTokenProvider.generateToken(email))
     }
 
-    fun signUp(request: SignUpRequest): MemberResponse {
-        val (email, password, nickname) = request
+    override fun signUp(request: OAuthSignUpRequest): MemberResponse {
+        val (email, password, nickname, socialProvider) = request
         val member = Member.of(
             email = email,
             password = passwordEncoder.encode(password),
             nickname = nickname,
+            socialProvider = socialProvider
         )
         return memberRepository.save(member).toResponse()
     }

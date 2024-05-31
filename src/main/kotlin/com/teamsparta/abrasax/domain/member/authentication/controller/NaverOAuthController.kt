@@ -2,7 +2,7 @@ package com.teamsparta.abrasax.domain.member.authentication.controller
 
 import com.teamsparta.abrasax.domain.member.authentication.dto.LoginRequest
 import com.teamsparta.abrasax.domain.member.authentication.dto.LoginResponse
-import com.teamsparta.abrasax.domain.member.authentication.dto.SignUpRequest
+import com.teamsparta.abrasax.domain.member.authentication.dto.OAuthSignUpRequest
 import com.teamsparta.abrasax.domain.member.authentication.service.NaverOAuthServiceImpl
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,10 +38,11 @@ class NaverOAuthController(
         val password = id.substring(0 until 20)
         if (naverOAuthServiceImpl.checkSignedUp(email) == false) {
             naverOAuthServiceImpl.signUp(
-                SignUpRequest(
+                OAuthSignUpRequest(
                     email = email,
                     password = password,
-                    nickname = nickname
+                    nickname = nickname,
+                    socialProvider = "Naver"
                 )
             )
         }

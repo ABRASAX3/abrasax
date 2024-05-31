@@ -4,7 +4,7 @@ import com.teamsparta.abrasax.domain.member.authentication.dto.LoginRequest
 import com.teamsparta.abrasax.domain.member.authentication.dto.LoginResponse
 import com.teamsparta.abrasax.domain.member.authentication.dto.SignUpRequest
 import com.teamsparta.abrasax.domain.member.authentication.dto.UpdatePasswordRequest
-import com.teamsparta.abrasax.domain.member.authentication.service.AuthServiceImpl
+import com.teamsparta.abrasax.domain.member.authentication.service.AuthService
 import com.teamsparta.abrasax.domain.member.dto.MemberResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthenticationController(
-    private val authService: AuthServiceImpl // 컨트롤러에서 서비스 연결
+    private val authService: AuthService // 컨트롤러에서 서비스 연결
 ) {
 
     @PostMapping("/sign-up")
