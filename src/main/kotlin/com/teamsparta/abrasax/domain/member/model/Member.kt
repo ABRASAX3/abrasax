@@ -9,22 +9,22 @@ import java.util.regex.Pattern
 @Entity
 @Table(name = "member")
 class Member(
-    @Column(name = "nickname")
+    @Column(name = "nickname", nullable = false)
     var nickname: String,
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     var password: String,
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     var email: String,
 
-    @Column(name = "social_accounts")
+    @Column(name = "social_accounts", nullable = false)
     var stringifiedSocialAccounts: String,
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime,
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime,
 
     @Column(name = "deleted_at")
