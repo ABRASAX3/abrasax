@@ -25,7 +25,8 @@ class SecurityConfig(
         "/",
         "/swagger-ui/**",
         "/v3/**",
-        "/auth/**",
+        "/auth/login",
+        "/auth/sign-up",
         "/oauth2/**",
     )
 

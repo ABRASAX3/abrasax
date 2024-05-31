@@ -1,5 +1,6 @@
 package com.teamsparta.abrasax.domain.post.comment.model
 
+import com.teamsparta.abrasax.common.dto.IdResponseDto
 import com.teamsparta.abrasax.domain.member.model.Member
 import com.teamsparta.abrasax.domain.post.comment.dto.CommentResponseDto
 import com.teamsparta.abrasax.domain.post.model.Post
@@ -71,5 +72,11 @@ fun Comment.toCommentResponseDto(): CommentResponseDto {
         id = id!!,
         content = content,
         authorId = member.id!!,
+    )
+}
+
+fun Comment.toIdResponseDto(): IdResponseDto {
+    return IdResponseDto(
+        id = id!!,
     )
 }
