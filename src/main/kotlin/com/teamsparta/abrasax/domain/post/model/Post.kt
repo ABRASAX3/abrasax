@@ -58,31 +58,31 @@ class Post(
     }
 
     companion object {
-        private fun validateTitleLength(title: String) {
-            if (title.isEmpty() || title.length > 20) {
+        private fun validateTitleLength(newTitle: String) {
+            if (newTitle.isEmpty() || newTitle.length > 20) {
                 throw DomainInvariantException.InvalidTitleException("제목은 비어있지 않고 20자 이하여야 합니다.")
             }
         }
 
-        private fun validateContentLength(content: String) {
-            if (content.isEmpty() || content.length > 1000) {
+        private fun validateContentLength(newContent: String) {
+            if (newContent.isEmpty() || newContent.length > 1000) {
                 throw DomainInvariantException.InvalidContentException("내용은 비어있지 않고 1000자 이하여야 합니다.")
             }
         }
 
-        private fun validateTagListSize(tags: List<String>) {
-            if (tags.size > 5)
+        private fun validateTagListSize(newTags: List<String>) {
+            if (newTags.size > 5)
                 throw DomainInvariantException.InvalidTagSizeException("태그는 5개를 초과할 수 없습니다.")
         }
 
-        private fun validateTagLength(tags: List<String>) {
-            if (tags.any { it.length > 15 })
+        private fun validateTagLength(newTags: List<String>) {
+            if (newTags.any { it.length > 15 })
                 throw DomainInvariantException.InvalidTagLengthException("태그는 15자 이하여야 합니다.")
         }
 
-        private fun validateNoDuplicateTags(tags: List<String>) {
-            val distinctTags = tags.distinct()
-            if (distinctTags.size != tags.size) {
+        private fun validateNoDuplicateTags(newTags: List<String>) {
+            val distinctTags = newTags.distinct()
+            if (distinctTags.size != newTags.size) {
                 throw DomainInvariantException.InvalidDuplicateTagException("중복된 태그는 생성이 불가능합니다.")
             }
         }

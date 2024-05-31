@@ -46,8 +46,8 @@ class Comment(
     }
 
     companion object {
-        private fun validateContentLength(content: String) {
-            if (content.isEmpty() || content.length > 200) {
+        private fun validateContentLength(newContent: String) {
+            if (newContent.isEmpty() || newContent.length > 200) {
                 throw InvalidObjectException("댓글의 내용은 1자 이상 200자 이하여야합니다.")
             }
         }

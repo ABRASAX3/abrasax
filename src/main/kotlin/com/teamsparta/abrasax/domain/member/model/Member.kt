@@ -52,25 +52,25 @@ class Member(
 
 
     companion object {
-        private fun validateNickname(nickname: String) {
-            if (nickname.length > 10) {
-                throw DomainInvariantException("Nickname must be less than 10 characters.")
+        private fun validateNickname(newNickname: String) {
+            if (newNickname.length > 10) {
+                throw DomainInvariantException("Nickname must be less than 10 characters. $newNickname")
             }
-            if (!Pattern.matches("^[a-zA-Z0-9가-힣]*$", nickname)) { //특수문자 확인
-                throw DomainInvariantException("Invalid nickname format.")
-            }
-        }
-
-        private fun validateEmail(email: String) {
-
-            if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", email)) {
-                throw DomainInvariantException("Invalid email format.")
+            if (!Pattern.matches("^[a-zA-Z0-9가-힣]*$", newNickname)) { //특수문자 확인
+                throw DomainInvariantException("Invalid nickname format. $newNickname")
             }
         }
 
+        private fun validateEmail(newEmail: String) {
 
-        private fun validateSocialAccounts(socialAccounts: List<String>) {
-            if (!socialAccounts.any { it.startsWith("http://") || it.startsWith("https://") }) {
+            if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", newEmail)) {
+                throw DomainInvariantException("Invalid email format. $newEmail")
+            }
+        }
+
+
+        private fun validateSocialAccounts(newSocialAccounts: List<String>) {
+            if (!newSocialAccounts.any { it.startsWith("http://") || it.startsWith("https://") }) {
                 throw DomainInvariantException("Social account URLs must start with http:// or https://")
             }
 
