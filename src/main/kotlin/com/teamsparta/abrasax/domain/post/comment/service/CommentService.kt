@@ -1,6 +1,7 @@
 package com.teamsparta.abrasax.domain.post.comment.service
 
 
+
 import com.teamsparta.abrasax.common.dto.IdResponseDto
 import com.teamsparta.abrasax.domain.exception.CommentMismatchException
 import com.teamsparta.abrasax.domain.exception.MemberNotFoundException
@@ -43,8 +44,8 @@ class CommentService(
     }
 
     @Transactional
-    fun updateComment(user: User, postId: Long, commentId: Long, requestDto: UpdateCommentRequestDto): IdResponseDto {
 
+    fun updateComment(user: User, postId: Long, commentId: Long, requestDto: UpdateCommentRequestDto): IdResponseDto {
         if (postRepository.existsByIdAndDeletedAtIsNull(postId) == false)
             throw ModelNotFoundException("Post", postId)
         val comment = commentRepository.findByIdAndDeletedAtIsNull(commentId) ?: throw ModelNotFoundException(
@@ -62,6 +63,7 @@ class CommentService(
     }
 
     @Transactional
+
     fun deleteComment(user: User, postId: Long, commentId: Long) {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
         if (post.id != postId) throw CommentMismatchException(postId, commentId)
@@ -74,6 +76,7 @@ class CommentService(
             modelName = "Comment",
             id = commentId
         )
+
         comment.delete()
     }
 

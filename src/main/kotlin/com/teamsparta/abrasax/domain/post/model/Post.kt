@@ -1,5 +1,6 @@
 package com.teamsparta.abrasax.domain.post.model
 
+
 import com.teamsparta.abrasax.common.dto.IdResponseDto
 import com.teamsparta.abrasax.domain.exception.DomainInvariantException
 import com.teamsparta.abrasax.domain.helper.ListStringifyHelper
