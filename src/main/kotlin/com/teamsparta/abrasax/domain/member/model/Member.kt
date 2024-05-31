@@ -34,16 +34,16 @@ class Member(
     }
 
     fun updatePassword(newPassword: String) {
-        //validatePassword(newPassword)
         password = newPassword
     }
+
 
     companion object {
         private fun validateNickname(nickname: String) {
             if (nickname.length > 10) {
                 throw IllegalArgumentException("Nickname must be less than 10 characters.")
             }
-            if (!Pattern.matches("^[a-zA-Z0-9]*$", nickname)) { //특수문자 확인
+            if (!Pattern.matches("^[a-zA-Z0-9가-힣]*$", nickname)) { //특수문자 확인
                 throw IllegalArgumentException("Invalid nickname format.")
             }
         }
@@ -64,17 +64,16 @@ class Member(
         }
 
 
-        fun of(email: String, nickname: String, password: String, stringifiedSocialAccounts: String): Member {
+        fun of(email: String, nickname: String, password: String): Member {
             validateNickname(nickname)
             validateEmail(email)
-            //validatePassword(password)
 
 
             return Member(
                 email = email,
                 nickname = nickname,
                 password = password,
-                stringifiedSocialAccounts = stringifiedSocialAccounts
+                stringifiedSocialAccounts = ""
             )
         }
     }

@@ -48,8 +48,7 @@ class AuthService(
         val member = Member.of(
             email = email,
             password = passwordEncoder.encode(password),
-            nickname = nickname,
-            stringifiedSocialAccounts = ""
+            nickname = nickname
         ) // membersecurity dto에서 입력받은 email이랑 암호화된 비밀번호를 해당 변수에 저장
         memberRepository.save(member) //데이터베이스에 암호화된 비밀번호랑 이메일을 저장함
     }
