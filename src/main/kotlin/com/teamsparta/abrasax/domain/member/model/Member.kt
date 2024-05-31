@@ -39,7 +39,7 @@ class Member(
     var id: Long? = null
 
     fun updateProfile(newSocialAccounts: List<String>, newNickname: String) {
-        validateNickname(nickname)
+        validateNickname(newNickname)
         validateSocialAccounts(newSocialAccounts)
         nickname = newNickname
         stringifiedSocialAccounts = ListStringifyHelper.stringifyList(newSocialAccounts)
