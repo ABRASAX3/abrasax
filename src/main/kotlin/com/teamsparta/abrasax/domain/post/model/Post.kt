@@ -65,12 +65,12 @@ class Post(
                 throw ModelInvariantException.InvalidContentException("내용은 비어있지 않고 1000자 이하여야 합니다.")
             }
         }
-        private fun validateTagListSize(tag: List<String>) {
-            if (tag.size > 5)
+        private fun validateTagListSize(tags: List<String>) {
+            if (tags.size > 5)
                 throw ModelInvariantException.InvalidTagSizeException("태그는 5개를 초과할 수 없습니다.")
         }
-        private fun validateTagLength(tag: List<String>) {
-            if (tag.any { it.length > 15})
+        private fun validateTagLength(tags: List<String>) {
+            if (tags.any { it.length > 15})
                 throw ModelInvariantException.InvalidTagLengthException("태그는 15자 이하여야 합니다.")
         }
         private fun validateNoDuplicateTags(tags: List<String>) {
