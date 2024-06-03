@@ -61,6 +61,8 @@ https://youtu.be/7aZyFnnfp4E?feature=shared
 
 - **소셜 로그인 기능 구현**
     - 네이버 로그인 구현
+    - application.yml에 Naver Login API 관련 정보를 기입해야 합니다.
+    - [참고 페이지](https://github.com/ABRASAX3/abrasax/pull/14)
 
 ## 환경설정
 
