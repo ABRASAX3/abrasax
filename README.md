@@ -66,8 +66,8 @@ https://youtu.be/7aZyFnnfp4E?feature=shared
 
 ## 환경설정
 
-Language : Kotlin 1.9.24
-IDEA : IntelliJ IDEA 2024.1
-JDK : temurin 17.0.11  
-Database : super base & postgresql  
-springframework.boot : 3.3.0
+- Language : Kotlin 1.9.24
+- IDEA : IntelliJ IDEA 2024.1
+- JDK : temurin 17.0.11
+- Database : super base & postgresql
+- springframework.boot : 3.3.0
