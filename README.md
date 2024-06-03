@@ -55,7 +55,7 @@ https://youtu.be/7aZyFnnfp4E?feature=shared
 
 - **회원정보 관리**
     - 프로필 수정 기능
-        - Nickname, Social Accounts 같은 정보를 볼 수 있어야 하며 수정할 수 있어야 합니다.
+        - Nickname, Social Accounts 수정
     - 비밀번호 수정 기능
         - 현재 비밀번호와 새로운 비밀번호를 입력받아 검증 후 비밀번호 수정
 
